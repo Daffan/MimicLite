@@ -1,0 +1,16 @@
+[project]
+name = "aa-mjlab-env"
+version = "0.1.0"
+requires-python = "==3.12.*"
+dependencies = [
+    "active_adaptation[mjlab]",
+    "mimic-lite",
+    "mujoco<3.8",
+]
+
+[tool.uv.sources]
+active_adaptation = { path = "../..", editable = true }
+mimic-lite = { path = "../../projects/mimic-lite", editable = true }
+
+[tool.uv]
+package = false

@@ -8,7 +8,10 @@ from pathlib import Path
 from active_adaptation.utils import wandb as aa_wandb_utils
 
 from omegaconf import OmegaConf
-from isaaclab.app import AppLauncher
+try:
+    from isaaclab.app import AppLauncher  # noqa: F401  (unused; isaaclab backend only)
+except ModuleNotFoundError:
+    AppLauncher = None
 from play import main as play_main
 from eval import main as eval_main
 

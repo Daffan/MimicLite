@@ -7,7 +7,10 @@ import sys
 from fractions import Fraction
 from omegaconf import OmegaConf
 
-from isaaclab.app import AppLauncher
+try:
+    from isaaclab.app import AppLauncher  # noqa: F401  (unused; isaaclab backend only)
+except ModuleNotFoundError:
+    AppLauncher = None
 
 import os
 import datetime
