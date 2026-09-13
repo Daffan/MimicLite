@@ -4,7 +4,7 @@ defaults:
   - /algo/ppo/module: large
   - override /algo: mimic_lite_ppo
 
-total_iters: 4000
+total_iters: 50000
 checkpoint_interval: 1000
 upload_interval: 1000
 

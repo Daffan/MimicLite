@@ -1,0 +1,7 @@
+# @package task.command
+
+motion_cfgs:
+  lafan_gmr:
+    path: "../any4hdmi/output/g1/lafan_gmr"
+    weight: 1.0
+    full_motion: true

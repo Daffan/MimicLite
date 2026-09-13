@@ -1,0 +1,53 @@
+# @package task.command
+
+motion_cfgs:
+  lafan:
+    path: "../any4hdmi/output/booster_t1/lafan"
+    weight: 1.0
+    full_motion: true
+    # Curated subset: match Unitree's official g1 LAFAN release (40 of 77 clips).
+    # Dropped 37 clips by whole category — obstacles*/ground*/push*/pushAndFall*/
+    # pushAndStumble*/aiming*/multipleActions* — that are terrain-dependent,
+    # ground/crawl, external-push, or non-locomotion and are hard/unphysical to
+    # track on a flat plane. To train on the full 77-clip set, delete the
+    # `filenames` block below. See memory: g1-lafan-datasets.
+    # 2026-09-13: also dropped fallAndGetUp* (6 clips): 17-44% of their frames
+    # are lying with reference geoms penetrating up to 0.40m below ground and
+    # retargeting joint-vel glitches up to 53 rad/s; sampling resets from those
+    # frames spawns the robot inside the floor with explosive energy (solver
+    # ejects it -> jump -> guaranteed termination).
+    filenames:
+      - dance1_subject1.npz
+      - dance1_subject2.npz
+      - dance1_subject3.npz
+      - dance2_subject1.npz
+      - dance2_subject2.npz
+      - dance2_subject3.npz
+      - dance2_subject4.npz
+      - dance2_subject5.npz
+      - fight1_subject2.npz
+      - fight1_subject3.npz
+      - fight1_subject5.npz
+      - fightAndSports1_subject1.npz
+      - fightAndSports1_subject4.npz
+      - jumps1_subject1.npz
+      - jumps1_subject2.npz
+      - jumps1_subject5.npz
+      - run1_subject2.npz
+      - run1_subject5.npz
+      - run2_subject1.npz
+      - run2_subject4.npz
+      - sprint1_subject2.npz
+      - sprint1_subject4.npz
+      - walk1_subject1.npz
+      - walk1_subject2.npz
+      - walk1_subject5.npz
+      - walk2_subject1.npz
+      - walk2_subject3.npz
+      - walk2_subject4.npz
+      - walk3_subject1.npz
+      - walk3_subject2.npz
+      - walk3_subject3.npz
+      - walk3_subject4.npz
+      - walk3_subject5.npz
+      - walk4_subject1.npz

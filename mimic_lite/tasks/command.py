@@ -350,6 +350,12 @@ class RobotTracking(Command, namespace="mimic_lite"):
         },
         init_joint_pos_noise: float = 0.0,
         init_joint_vel_noise: float = 0.0,
+        # clamp reference velocities copied into the sim at reset (None = off).
+        # Guards against retargeting glitch frames whose joint/root velocity
+        # spikes would inject explosive energy on reset.
+        max_init_joint_vel: float | None = None,
+        max_init_root_lin_vel: float | None = None,
+        max_init_root_ang_vel: float | None = None,
         # observation parameters
         future_steps: List[int] = [1, 2, 8, 16],
         diff_future_steps: List[int] = [0, 1],
@@ -509,6 +515,9 @@ class RobotTracking(Command, namespace="mimic_lite"):
 
         self.init_joint_pos_noise = init_joint_pos_noise
         self.init_joint_vel_noise = init_joint_vel_noise
+        self.max_init_joint_vel = max_init_joint_vel
+        self.max_init_root_lin_vel = max_init_root_lin_vel
+        self.max_init_root_ang_vel = max_init_root_ang_vel
 
         self.rewind_prob = rewind_prob
         self.rewind_steps_range: Tuple[int, int] = tuple(rewind_steps_range)
@@ -657,6 +666,14 @@ class RobotTracking(Command, namespace="mimic_lite"):
         velocities = (
             torch.cat([init_root_lin_vel, init_root_ang_vel], dim=-1) + vel_rand_samples
         )
+        if self.max_init_root_lin_vel is not None:
+            velocities[:, 0:3].clamp_(
+                -self.max_init_root_lin_vel, self.max_init_root_lin_vel
+            )
+        if self.max_init_root_ang_vel is not None:
+            velocities[:, 3:6].clamp_(
+                -self.max_init_root_ang_vel, self.max_init_root_ang_vel
+            )
 
         self.asset.write_root_link_pose_to_sim(
             torch.cat([positions, orientations], dim=-1), env_ids=env_ids
@@ -676,6 +693,8 @@ class RobotTracking(Command, namespace="mimic_lite"):
 
         init_joint_pos += joint_pos_noise * self.init_joint_pos_noise
         init_joint_vel += joint_vel_noise * self.init_joint_vel_noise
+        if self.max_init_joint_vel is not None:
+            init_joint_vel.clamp_(-self.max_init_joint_vel, self.max_init_joint_vel)
 
         # joint_pos_limits = self.asset.data.soft_joint_pos_limits[env_ids]
         # init_joint_pos.clamp_(joint_pos_limits[..., 0], joint_pos_limits[..., 1])
